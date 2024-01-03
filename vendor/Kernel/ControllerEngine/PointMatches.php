@@ -73,9 +73,9 @@ class PointMatches extends ReflectionProcessing
         return $attributeClass['response_404'];
     }
 
-    public function execute($attributeClass): mixed
+    public function execute($attributeClass): void
     {
-        return $attributeClass['methods']['method']->invoke($attributeClass['instance'], ...$attributeClass['params']);
+        $attributeClass['methods']['method']->invoke($attributeClass['instance'], ...$attributeClass['params']);
     }
 
     private function matchingMethod()
