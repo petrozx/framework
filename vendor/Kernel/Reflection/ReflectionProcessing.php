@@ -19,18 +19,19 @@ abstract class ReflectionProcessing implements WorkingWithInterface
         $attributesInfo = [];
         foreach ($this->arFiles as $fileInfo) {
             require_once($fileInfo['realpath']);
-            $reflection = new \ReflectionClass($fileInfo['name']);
-            $constructor = $reflection->getConstructor();
-            if (isset($constructor)) {
-                foreach ($constructor->getParameters() as $param) {
-                    $name = $param->name;
-                    $instance = $param->getType()->getName()::getInstance();
-                    $params[$name] = $instance;
-                    
+            if (class_exists($fileInfo['name'])) {
+                $reflection = new \ReflectionClass($fileInfo['name']);
+                $constructor = $reflection->getConstructor();
+                if (isset($constructor)) {
+                    foreach ($constructor->getParameters() as $param) {
+                        $name = $param->name;
+                        $instance = $param->getType()->getName()::getInstance();
+                        $params[$name] = $instance;
+                        
+                    }
                 }
+                $attributesInfo[] = $this->getAttribute($reflection, $reflection->newInstance(...$params));
             }
-            $attributesInfo[] = $this->getAttribute($reflection, $reflection->newInstance(...$params));
-
         }
         return $attributesInfo;
     }

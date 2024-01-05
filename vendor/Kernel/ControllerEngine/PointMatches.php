@@ -24,12 +24,12 @@ class PointMatches extends ReflectionProcessing
         private HttpRequest $request,
         private HttpResponse $response,
     ){
-        parent::__construct();
-        $finded = $this->find(self::needle, [
-            'method' => self::methods[$this->request->getMethod()],
-            'uri'    => $this->request->getRoute(),
-        ]);
-        $this->execute($finded);
+            parent::__construct();
+            $finded = $this->find(self::needle, [
+                'method' => self::methods[$this->request->getMethod()],
+                'uri'    => $this->request->getRoute(),
+            ]);
+            $this->execute($finded);
     } 
 
     public function find($name, $args): array

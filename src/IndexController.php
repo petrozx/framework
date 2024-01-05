@@ -23,6 +23,7 @@ class IndexController
     #[POST(uri: "/get/one")]
     public function check()
     {
-        return $this->response->success($this->request->toArray());
+        $async = (new \Kernel\Async\AsyncEngine)->getData('Test::do', [5,4,3,2,1,6,9]);
+        return $this->response->success($async);
     }
 }
