@@ -3,11 +3,11 @@
 class Test
 {
 
-    public static function do($num)
+    public static function do($arg)
     {
-        sleep($num);
+        sleep($arg);
         
-        return ["ok" => $num];
+        return ["ok" => $arg];
     }
 
 }

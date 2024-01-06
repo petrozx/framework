@@ -4,13 +4,15 @@ namespace Kernel\HttpEngine;
 
 class HttpRequest
 {
-    private mixed $request;
     private mixed $files;
     private array $error;
     private string $route;
     private string $method;
     private static $instance;
-    
+    private array $get;
+    private mixed $post;
+
+
     public static function getInstance()
     {
         if (self::$instance === null) {
@@ -21,17 +23,19 @@ class HttpRequest
 
     private function __construct()
     {
+        $this->get = $_GET;
+        unset($_GET);
         if (empty($_POST)) {
             try {
                 $stream = fopen("php://input", "r");
-                $this->request = stream_get_contents($stream);
+                $this->post = stream_get_contents($stream);
             } catch (Exception $e) {
                 $error[] = $e;
             } finally {
                 fclose($stream);
             }
         } else {
-            $this->request = $_POST;
+            $this->post = $_POST;
             unset($_POST);
         }
         if (!empty($_FILES)) {
@@ -52,18 +56,23 @@ class HttpRequest
         return $this->method;
     }
 
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
     public function toArray()
     {
-        return is_array($this->request) ? $this->request : json_decode($this->request, true);
+        return is_array($this->post) ? $this->post : json_decode($this->post, true);
     }
 
     public function getFiles()
     {
         return $this->files;
+    }
+
+    public function GET()
+    {
+        return $this->get;
+    }
+
+    public function POST()
+    {
+        return $this->post;
     }
 }

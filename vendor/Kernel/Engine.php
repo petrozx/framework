@@ -1,4 +1,5 @@
 <?php
+define("ASYNC", str_contains($_SERVER['REQUEST_URI'], '/async'));
 require_once('./autoload.php');
 use Main\Application;
 use Kernel\HttpEngine\HttpRequest;

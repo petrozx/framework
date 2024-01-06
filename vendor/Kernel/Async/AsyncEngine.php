@@ -4,27 +4,24 @@ namespace Kernel\Async;
 
 class AsyncEngine
 {
-
-    private const URL = "tcp://192.168.88.243:80";
-    private const HEADER = "GET /async HTTP/1.0\r\nHost: 192.168.88.243\r\nAccept: */*\r\n\r\n";
     public function __construct()
     {}
 
-    public function getData($method, array $counts)
+    public function getData($method, array $args)
     {
-        $url = self::URL;
+        $url = "tcp://$_SERVER[SERVER_ADDR]:$_SERVER[SERVER_PORT]";
         $sockets = [];
         $results = [];
-        foreach ($counts as $count) {
+        foreach ($args as $arg) {
+            $arg = serialize($arg);
             $socket = stream_socket_client($url, $errno, $errstr, 30);
-    
             if (!$socket) {
                 echo "Error connecting to $url: $errstr ($errno)\n";
                 continue;
             }
-            fwrite($socket, "GET /async?oper=$method&num=$count HTTP/1.0\r\nHost: 192.168.88.243\r\nAccept: */*\r\n\r\n");
+            fwrite($socket, "GET /async?function=$method&arg=$arg HTTP/1.0\r\nHost: $_SERVER[SERVER_ADDR]\r\nAccept: */*\r\n\r\n");
             stream_set_blocking($socket, false);
-            $sockets[$count] = $socket;
+            $sockets[$arg] = $socket;
         }
         while (!empty($sockets)) {
             $read = $sockets;
