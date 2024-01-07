@@ -20,31 +20,31 @@ class HttpResponse
 
     public function __destruct()
     {
-        echo json_encode($this->data);
+        echo $this->data;
     }
 
     public function success($data, $message = '', $statusCode = 200)
     {
         header($_SERVER["SERVER_PROTOCOL"]." $statusCode");
-        $this->data = [
+        $this->data = json_encode([
             'error' => [],
             'data' => $data,
             'message' => $message,
-        ];
+        ]);
     }
 
     public function fail($errors, $message = '', $statusCode = 400)
     {
         header($_SERVER["SERVER_PROTOCOL"]." $statusCode");
-        $this->data = [
+        $this->data = json_encode([
             'error' => $errors,
             'data' => null,
             'message' => $message,
-        ];
+        ]);
     }
 
     public function __invoke($data)
     {
-        $this->data = $data;
+        $this->data = serialize($data);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 use Kernel\ControllerEngine\Attributes\Controller;
 use Kernel\ControllerEngine\Attributes\POST;
 use Kernel\ControllerEngine\Attributes\GET;
@@ -23,7 +24,7 @@ class IndexController
     #[POST(uri: "/get/one")]
     public function check()
     {
-        $async = (new \Kernel\Async\AsyncEngine)->getData('Test::do', [4,3,2,1]);
-        return $this->response->success($async);
+        $arUser = (new \Kernel\Async\AsyncEngine)->getData('Test::do', range(1, 100));
+        return $this->response->success(count($arUser));
     }
 }

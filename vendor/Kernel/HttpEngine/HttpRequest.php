@@ -29,7 +29,7 @@ class HttpRequest
             try {
                 $stream = fopen("php://input", "r");
                 $this->post = stream_get_contents($stream);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $error[] = $e;
             } finally {
                 fclose($stream);

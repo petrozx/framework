@@ -17,9 +17,9 @@ abstract class ReflectionProcessing implements WorkingWithInterface
     private function searching()
     {
         $attributesInfo = [];
-        foreach ($this->arFiles as $fileInfo) {
+        foreach ($this->arFiles as $key => $fileInfo) {
             require_once($fileInfo['realpath']);
-            if (class_exists($fileInfo['name'])) {
+            if (class_exists($fileInfo['name'],false)) {
                 $reflection = new \ReflectionClass($fileInfo['name']);
                 $constructor = $reflection->getConstructor();
                 if (isset($constructor)) {

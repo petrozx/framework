@@ -11,7 +11,6 @@ class AsyncEngine
     {
         $url = "tcp://$_SERVER[SERVER_ADDR]:$_SERVER[SERVER_PORT]";
         $sockets = [];
-        $results = [];
         foreach ($args as $arg) {
             $arg = serialize($arg);
             $socket = stream_socket_client($url, $errno, $errstr, 30);
@@ -34,15 +33,12 @@ class AsyncEngine
                 while ($chunk = fread($socket, 1024)) {
                     $data .= $chunk;
                 }
-        
                 fclose($socket);
                 $bodyStart = strpos($data, "\r\n\r\n");
-
                 // Выделяем тело ответа, начиная с позиции конца заголовков
                 $body = substr($data, $bodyStart + 4);
                 // Обработка данных
-                $returned[] = json_decode($body);
-        
+                $returned[] = unserialize($body);
                 unset($sockets[$url]);
             }
         }
