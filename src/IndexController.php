@@ -26,7 +26,7 @@ class IndexController
     #[POST(uri: "/get/one")]
     public function check()
     {
-        $responses = $this->asyncEngine->getData('Test::do', range(1,10));
+        $responses = $this->asyncEngine->async('Test::do', range(1,10));
         return $this->response->success($responses[9]);
     }
 }

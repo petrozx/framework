@@ -15,7 +15,7 @@ class AsyncEngine
     private function __construct()
     {}
 
-    public function getData($method, array $args)
+    public function async($method, array $args)
     {
         $url = "tcp://$_SERVER[SERVER_ADDR]:$_SERVER[SERVER_PORT]";
         $sockets = [];

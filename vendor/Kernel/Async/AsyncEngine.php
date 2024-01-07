@@ -20,7 +20,7 @@ class AsyncEngine
         $this->url = "tcp://$_SERVER[SERVER_ADDR]:$_SERVER[SERVER_PORT]";
     }
 
-    public function getData($method, $args)
+    public function async($method, $args)
     {
         foreach ($args as $key => $arg) {
             $this->addRequest($method, $arg, $key);
