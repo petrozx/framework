@@ -26,10 +26,12 @@ class IndexController
     #[POST(uri: "/get/one")]
     public function check()
     {
-        $responses = $this->asyncEngine->async(function($int) {
+        $this->asyncEngine->async(function($int) {
             sleep(10);
             return $int;
         }, range(1,2));
+        $this->asyncEngine->async('Test::do', range(1,2));
+        $responses = $this->asyncEngine->getResponses();
         return $this->response->success($responses);
     }
 }

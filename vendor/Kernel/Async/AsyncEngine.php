@@ -26,12 +26,14 @@ class AsyncEngine
         if ($method instanceof \Closure) {
             $method = AsyncClosure::prepare($method);
             $this->closure = true;
+        } else {
+            $this->closure = false;
         }
         foreach ($args as $key => $arg) {
             $this->addRequest($method, $arg, $key);
         }
         $this->waitForResponses();
-        return $this->getResponses();
+        return $this;
     }
 
     private function addRequest($method, $arg, $key)
@@ -94,6 +96,8 @@ class AsyncEngine
 
     public function getResponses()
     {
-        return $this->responses;
+        $responses = $this->responses;
+        unset($this->responses);
+        return $responses;
     }
 }
