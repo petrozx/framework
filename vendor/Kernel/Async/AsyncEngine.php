@@ -5,6 +5,7 @@ class AsyncEngine
 {
     private $url;
     private $activeConnections;
+    private $closure = false;
     private $responses = [];
     private static $instance;
     public static function getInstance()
@@ -22,6 +23,10 @@ class AsyncEngine
 
     public function async($method, $args)
     {
+        if ($method instanceof \Closure) {
+            $method = AsyncClosure::prepare($method);
+            $this->closure = true;
+        }
         foreach ($args as $key => $arg) {
             $this->addRequest($method, $arg, $key);
         }
@@ -41,7 +46,7 @@ class AsyncEngine
 
         stream_set_blocking($connection, 0);
 
-        $request = "GET /async?function=$method&arg=$arg HTTP/1.0\r\nHost: $_SERVER[SERVER_ADDR]\r\nAccept: */*\r\n\r\n";
+        $request = "GET /async?function=$method&arg=$arg&closure=$this->closure HTTP/1.0\r\nHost: $_SERVER[SERVER_ADDR]\r\nAccept: */*\r\n\r\n";
         fwrite($connection, $request);
 
         $this->activeConnections[$key] = $connection;
